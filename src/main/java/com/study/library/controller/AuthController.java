@@ -41,7 +41,9 @@ public class AuthController {
             return ResponseEntity.badRequest().body(errorMap);
         }
 
-        return ResponseEntity.ok(null);
+        authService.signup(signupReqDto);
+
+        return ResponseEntity.created(null).body(true);
     }
 
 }

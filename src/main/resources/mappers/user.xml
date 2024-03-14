@@ -14,6 +14,21 @@
         <result property="updateDate" column="update_date" />
     </resultMap>
 
+    <insert
+            id="saveUser"
+            parameterType="com.study.library.entity.User"
+            keyProperty="userId"
+            useGeneratedKeys="true"
+    >
+        insert into user_tb
+        values(0, #{username}, #{password}, #{name}, #{email}, now(), now())
+    </insert>
+
+    <insert id="saveRole" parameterType="integer">
+        insert into role_register_tb
+        values(0, #{userId}, 1, now(), now())
+    </insert>
+
     <select
             id="findUserByUsername"
             parameterType="string"
@@ -32,4 +47,6 @@
         where
             username = #{username}
     </select>
+
+
 </mapper>
