@@ -4,6 +4,19 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.study.library.repository.UserMapper">
+    <resultMap id="RoleResultMap" type="com.study.library.entity.Role">
+        <id property="roleId" column="role_id" />
+        <result property="roleName" column="role_name" />
+        <result property="roleNameKor" column="role_name_kor" />
+    </resultMap>
+
+    <resultMap id="RoleRegisterResultMap" type="com.study.library.entity.RoleRegister">
+        <id property="roleRegisterId" column="role_register_id" />
+        <result property="userId" column="user_id" />
+        <result property="roleId" column="role_id" />
+        <association property="role" resultMap="RoleResultMap" />
+    </resultMap>
+
     <resultMap id="UserResultMap" type="com.study.library.entity.User">
         <id property="userId" column="user_id" />
         <result property="username" column="username" />
@@ -12,6 +25,7 @@
         <result property="email" column="email" />
         <result property="createDate" column="create_date" />
         <result property="updateDate" column="update_date" />
+        <collection property="roleRegisters" javaType="list" resultMap="RoleRegisterResultMap" />
     </resultMap>
 
     <insert
@@ -35,15 +49,21 @@
             resultMap="UserResultMap"
     >
         select
-            user_id,
-            username,
-            password,
-            name,
-            email,
-            create_date,
-            update_date
+            ut.user_id,
+            ut.username,
+            ut.password,
+            ut.name,
+            ut.email,
+            ut.create_date,
+            ut.update_date,
+            rrt.role_register_id,
+            rrt.role_id,
+            rt.role_name,
+            rt.role_name_kor
         from
-            user_tb
+            user_tb ut
+            left outer join role_register_tb rrt on(rrt.user_id = ut.user_id)
+            left outer join role_tb rt on(rt.role_id = rrt.role_id)
         where
             username = #{username}
     </select>

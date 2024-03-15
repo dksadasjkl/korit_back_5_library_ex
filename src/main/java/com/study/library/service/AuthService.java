@@ -51,10 +51,7 @@ public class AuthService {
             throw new BadCredentialsException("사용자 정보를 확인하세요");
         }
 
-        Authentication authentication = new UsernamePasswordAuthenticationToken(user.toPrincipalUser(), "");
-
-        return jwtProvider.generateToken(authentication);
-
+        return jwtProvider.generateToken(user);
     }
 
 }
