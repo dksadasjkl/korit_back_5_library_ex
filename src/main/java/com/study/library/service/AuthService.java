@@ -29,13 +29,13 @@ public class AuthService {
         return userMapper.findUserByUsername(username) != null;
     }
 
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class) // 모든 예외 롤백
     public void signup(SignupReqDto signupReqDto) {
         int successCount = 0;
         User user = signupReqDto.toEntity(passwordEncoder);
 
         successCount += userMapper.saveUser(user);
-        successCount += userMapper.saveRole(user.getUserId());
+        successCount += userMapper.saveRole(user.getUserId()); // keyProperty="userId", useGeneratedKeys="true"
 
         if(successCount < 2) {
             throw new SaveException();
@@ -47,11 +47,10 @@ public class AuthService {
         if(user == null) {
             throw new UsernameNotFoundException("사용자 정보를 확인하세요");
         }
-        if(!passwordEncoder.matches(signinReqDto.getPassword(), user.getPassword())) {
+        if(!passwordEncoder.matches(signinReqDto.getPassword(), user.getPassword())) { // 입력, db 비밀번호 매칭
             throw new BadCredentialsException("사용자 정보를 확인하세요");
         }
 
         return jwtProvider.generateToken(user);
     }
-
 }

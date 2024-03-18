@@ -30,15 +30,15 @@ public class ValidAop {
 
     @Around("pointCut()")
     public Object around(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
-        String methodName = proceedingJoinPoint.getSignature().getName();
+        String methodName = proceedingJoinPoint.getSignature().getName(); // 메소드이름
 
-        Object[] args = proceedingJoinPoint.getArgs();
+        Object[] args = proceedingJoinPoint.getArgs(); // 매개변수들
 
         BeanPropertyBindingResult bindingResult = null;
 
         for(Object arg : args) {
             if(arg.getClass() == BeanPropertyBindingResult.class) {
-                bindingResult = (BeanPropertyBindingResult) arg;
+                bindingResult = (BeanPropertyBindingResult) arg; // 원래 (Object)업캐스팅 되어들어가기 때문에 다운캐스팅
             }
         }
 
@@ -50,14 +50,15 @@ public class ValidAop {
                     signupReqDto = (SignupReqDto) arg;
                 }
             }
-
+            // 중복일때 
             if(userMapper.findUserByUsername(signupReqDto.getUsername()) != null){
                 ObjectError objectError = new FieldError("username", "username", "이미 존재하는 사용자이릅니다.");
                 bindingResult.addError(objectError);
             }
         }
+        
 
-        if(bindingResult.hasErrors()) {
+        if(bindingResult.hasErrors()) {  // 에러 조회
             List<FieldError> fieldErrors = bindingResult.getFieldErrors();
             Map<String, String> errorMap = new HashMap<>();
             for(FieldError fieldError : fieldErrors) {

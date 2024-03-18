@@ -47,7 +47,7 @@ public class User {
                 .username(username)
                 .name(name)
                 .email(email)
-                .authorities(getAuthorities())
+                .authorities(getAuthorities()) // 업캐스팅
                 .build();
     }
 }
