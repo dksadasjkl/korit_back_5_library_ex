@@ -38,10 +38,28 @@
         values(0, #{username}, #{password}, #{name}, #{email}, now(), now())
     </insert>
 
-    <insert id="saveRole" parameterType="integer">
+    <insert id="saveRole" >
         insert into role_register_tb
-        values(0, #{userId}, 1, now(), now())
+        values(0, #{userId}, #{roleId}, now(), now())
     </insert>
+
+    <select id="findRoleRegisterByUserIdAndRoleId"
+            resultMap="RoleRegisterResultMap">
+        select
+            rrt.role_register_id,
+            rrt.user_id,
+            rrt.role_id,
+            rt.role_name,
+            rt.role_name_kor,
+            rrt.create_date,
+            rrt.update_date
+        from
+            role_register_tb rrt
+            left outer join role_tb rt on(rt.role_id = rrt.role_id)
+        where
+            rrt.user_id = #{userId}
+            and rrt.role_id = #{roleId}
+    </select>
 
     <select
             id="findUserByUsername"

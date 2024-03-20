@@ -8,8 +8,6 @@ import com.study.library.jwt.JwtProvider;
 import com.study.library.repository.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -35,7 +33,7 @@ public class AuthService {
         User user = signupReqDto.toEntity(passwordEncoder);
 
         successCount += userMapper.saveUser(user);
-        successCount += userMapper.saveRole(user.getUserId()); // keyProperty="userId", useGeneratedKeys="true"
+        successCount += userMapper.saveRole(user.getUserId(), 1); // keyProperty="userId", useGeneratedKeys="true"
 
         if(successCount < 2) {
             throw new SaveException();

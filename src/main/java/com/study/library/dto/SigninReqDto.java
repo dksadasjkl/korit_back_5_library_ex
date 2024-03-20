@@ -1,6 +1,5 @@
 package com.study.library.dto;
 
-import com.study.library.entity.User;
 import lombok.Data;
 
 @Data
