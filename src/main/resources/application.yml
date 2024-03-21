@@ -31,6 +31,9 @@ spring:
     activate:
       on-profile: common
 
+client:
+  deploy-address: "localhost:3000"
+
 mybatis:
   mapper-locations:
     - /mappers/*.xml

@@ -1,5 +1,6 @@
 package com.study.library.service;
 
+import com.study.library.dto.OAuth2SignupReqDto;
 import com.study.library.dto.SigninReqDto;
 import com.study.library.dto.SignupReqDto;
 import com.study.library.entity.User;
@@ -40,6 +41,20 @@ public class AuthService {
         }
     }
 
+    @Transactional(rollbackFor = Exception.class)
+    public void oAUth2signup(OAuth2SignupReqDto oAuth2SignupReqDto) {
+        int successCount = 0;
+        User user = oAuth2SignupReqDto.toEntity(passwordEncoder);
+
+        successCount += userMapper.saveUser(user);
+        successCount += userMapper.saveRole(user.getUserId(), 1); // keyProperty="userId", useGeneratedKeys="true"
+        successCount += userMapper.saveOAuth2(oAuth2SignupReqDto.toOAuth2Entity(user.getUserId()));
+
+        if(successCount < 3) {
+            throw new SaveException();
+        }
+    }
+
     public String signin(SigninReqDto signinReqDto) {
         User user = userMapper.findUserByUsername(signinReqDto.getUsername());
         if(user == null) {
@@ -51,4 +66,5 @@ public class AuthService {
 
         return jwtProvider.generateToken(user);
     }
+
 }

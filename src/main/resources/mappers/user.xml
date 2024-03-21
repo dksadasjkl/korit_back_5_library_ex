@@ -17,6 +17,13 @@
         <association property="role" resultMap="RoleResultMap" />
     </resultMap>
 
+    <resultMap id="OAuth2ResultMap" type="com.study.library.entity.OAuth2">
+        <id property="oAuth2Id" column="oauth2_id" />
+        <result property="oAuth2Name" column="oauth2_name" />
+        <result property="userId" column="user_id" />
+        <result property="providerName" column="provider_name" />   
+    </resultMap>
+
     <resultMap id="UserResultMap" type="com.study.library.entity.User">
         <id property="userId" column="user_id" />
         <result property="username" column="username" />
@@ -26,6 +33,7 @@
         <result property="createDate" column="create_date" />
         <result property="updateDate" column="update_date" />
         <collection property="roleRegisters" javaType="list" resultMap="RoleRegisterResultMap" />
+        <collection property="oAuth2s" javaType="list" resultMap="OAuth2ResultMap" />
     </resultMap>
 
     <insert
@@ -77,14 +85,49 @@
             rrt.role_register_id,
             rrt.role_id,
             rt.role_name,
-            rt.role_name_kor
+            rt.role_name_kor,
+            oat.oauth2_id,
+            oat.oauth2_name,
+            oat.provider_name
         from
             user_tb ut
-            left outer join role_register_tb rrt on(rrt.user_id = ut.user_id)
-            left outer join role_tb rt on(rt.role_id = rrt.role_id)
+                left outer join role_register_tb rrt on(rrt.user_id = ut.user_id)
+                left outer join role_tb rt on(rt.role_id = rrt.role_id)
+                left outer join oauth2_tb oat on(oat.user_id = ut.user_id)
         where
             username = #{username}
     </select>
 
+    <select id="findUserByOAuth2name" resultMap="UserResultMap">
+        select
+            ut.user_id,
+            ut.username,
+            ut.password,
+            ut.name,
+            ut.email,
+            ut.create_date,
+            ut.update_date,
+            rrt.role_register_id,
+            rrt.role_id,
+            rt.role_name,
+            rt.role_name_kor,
+            oat.oauth2_id,
+            oat.oauth2_name,
+            oat.provider_name
+        from
+            user_tb ut
+                left outer join role_register_tb rrt on(rrt.user_id = ut.user_id)
+                left outer join role_tb rt on(rt.role_id = rrt.role_id)
+                left outer join oauth2_tb oat on(oat.user_id = ut.user_id)
+        where
+            oat.oauth2_name = #{oAuth2Name}
+    </select>
+
+    <insert id="saveOAuth2"
+            parameterType="com.study.library.entity.OAuth2"
+    >
+        insert into oauth2_tb
+        value(0, #{oAuth2Name}, #{userId}, #{providerName}, now(), now())
+    </insert>
 
 </mapper>

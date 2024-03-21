@@ -18,6 +18,7 @@ public class PermitAllFilter extends GenericFilter {
         List<String> antMatchers = List.of("error",
                                             "/server",
                                             "/auth",
+                                            "/oauth2",
                                             "/mail/authenticate"
         );
         
