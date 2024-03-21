@@ -20,15 +20,18 @@ public class PermitAllFilter extends GenericFilter {
                                             "/auth",
                                             "/mail/authenticate"
         );
+        
+
 
         String url = request.getRequestURI();
         request.setAttribute("isPermitAll", false);
         
         for(String antMatcher : antMatchers) {
-            if (url.startsWith(antMatcher)) { // 시작 확인
+            if (url.startsWith(antMatcher)) { // 시작하는 모든 요청
                 request.setAttribute("isPermitAll", true);
             }
         }
+        
         filterChain.doFilter(request, response);
     }
 }

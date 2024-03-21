@@ -46,6 +46,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilterAfter(permitAllFilter, LogoutFilter.class) //(LogoutFilter 후 필터추가) // 1
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)  //(Username 전에 필터추가) // 2
                 .exceptionHandling()
-                .authenticationEntryPoint(authEntryPoint); // EntryPoint 경로지정
+                .authenticationEntryPoint(authEntryPoint) // EntryPoint 경로지정
+                .and()
+                .oauth2Login()
+                .successHandler(null)
+                .userInfoEndpoint()
+                .userService(null);
     }
 }
