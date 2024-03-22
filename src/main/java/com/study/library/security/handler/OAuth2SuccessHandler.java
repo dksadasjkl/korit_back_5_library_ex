@@ -29,15 +29,6 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        // class org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken
-        System.out.println(authentication.getClass());
-        // class org.springframework.security.oauth2.core.user.DefaultOAuth2User
-        System.out.println(authentication.getPrincipal().getClass());
-        // Name: [111206998232404225570], Granted Authorities: 
-        // [[ROLE_USER, SCOPE_https://www.googleapis.com/auth/userinfo.email, SCOPE_https://www.googleapis.com/auth/userinfo.profile, SCOPE_openid]], User Attributes: [{id=111206998232404225570, provider=Google}]
-        System.out.println(authentication.getPrincipal());
-        // 111206998232404225570
-        System.out.println(authentication.getName());
 
         String name = authentication.getName(); // sub
         User user = userMapper.findUserByOAuth2name(name);

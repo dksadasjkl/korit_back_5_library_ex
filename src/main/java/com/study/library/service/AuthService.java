@@ -1,8 +1,10 @@
 package com.study.library.service;
 
+import com.study.library.dto.OAuth2MergeReqDto;
 import com.study.library.dto.OAuth2SignupReqDto;
 import com.study.library.dto.SigninReqDto;
 import com.study.library.dto.SignupReqDto;
+import com.study.library.entity.OAuth2;
 import com.study.library.entity.User;
 import com.study.library.exception.SaveException;
 import com.study.library.jwt.JwtProvider;
@@ -65,6 +67,26 @@ public class AuthService {
         }
 
         return jwtProvider.generateToken(user);
+    }
+
+    public void oAuth2Merge(OAuth2MergeReqDto oAuth2MergeReqDto) {
+        User user = userMapper.findUserByUsername(oAuth2MergeReqDto.getUsername()); // 받은 이름으로 user 객체 매핑
+
+        // db에서 값을 못 찾았을때
+        if(user == null) {
+            throw new UsernameNotFoundException("사용자 정보를 확인하세요");
+        }
+
+        if(!passwordEncoder.matches(oAuth2MergeReqDto.getPassword(), user.getPassword())) { // 입력, db 비밀번호 매칭
+            throw new BadCredentialsException("사용자 정보를 확인하세요");
+        }
+        OAuth2 oAuth2 = OAuth2.builder()
+                .oAuth2Name(oAuth2MergeReqDto.getOauth2Name())
+                .userId(user.getUserId())
+                .providerName(oAuth2MergeReqDto.getProviderName())
+                .build();
+
+        userMapper.saveOAuth2(oAuth2);
     }
 
 }
