@@ -33,7 +33,7 @@ public class JwtAuthenticationFilter extends GenericFilter {
             Claims claims = null;
             try {
                 claims = jwtProvider.getClaims(removeBearerToken); // null or 토큰
-            } catch (JwtException e) {
+            } catch (Exception e) {
                     response.sendError(HttpStatus.UNAUTHORIZED.value()); // 인증실패(401)
                     return;
             }

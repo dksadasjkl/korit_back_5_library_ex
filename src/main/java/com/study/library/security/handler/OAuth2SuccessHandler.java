@@ -1,6 +1,7 @@
 package com.study.library.security.handler;
 
 import com.study.library.entity.User;
+import com.study.library.jwt.JwtProvider;
 import com.study.library.repository.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,6 +20,9 @@ import java.io.IOException;
 public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
     @Value("${client.deploy-address}")
     private String clientAddress;
+
+    @Autowired
+    private JwtProvider jwtProvider;
 
     @Autowired
     private UserMapper userMapper;
@@ -47,8 +51,8 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
             return;
         }
 
-
         // Oauth2 로그인을 통해 회원가입을 진행한 기록이 있는지 상태
-
+        String accessToken = jwtProvider.generateToken(user);
+        response.sendRedirect("http://" + clientAddress + "/auth/oauth2/signin?accessToken=" + accessToken);
     }
 }

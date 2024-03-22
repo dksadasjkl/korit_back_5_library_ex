@@ -15,7 +15,8 @@ public class PermitAllFilter extends GenericFilter {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
-        List<String> antMatchers = List.of("error",
+        List<String> antMatchers = List.of( "login",
+                                            "error",
                                             "/server",
                                             "/auth",
                                             "/oauth2",
