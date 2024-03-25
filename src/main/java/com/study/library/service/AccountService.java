@@ -38,6 +38,5 @@ public class AccountService {
 
         user.setPassword(passwordEncoder.encode(editPasswordReqDto.getNewPassword()));
         userMapper.modifyPassword(user);
-
     }
 }

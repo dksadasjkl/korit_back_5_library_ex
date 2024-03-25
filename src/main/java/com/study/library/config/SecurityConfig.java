@@ -31,31 +31,33 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private OAuth2SuccessHandler oAuth2SuccessHandler;
 
     @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+        public BCryptPasswordEncoder passwordEncoder() {
+            return new BCryptPasswordEncoder();
+        }
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.cors();
-        http.csrf().disable();
-        http.authorizeRequests()
-                .antMatchers("/server/**", "/auth/**") // 3
-                .permitAll()
-                .antMatchers("/mail/authenticate")
-                .permitAll()
-                .anyRequest()
-                .authenticated()
-                .and()
-                .addFilterAfter(permitAllFilter, LogoutFilter.class) //(LogoutFilter 후 필터추가) // 1
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)  //(Username 전에 필터추가) // 2
-                .exceptionHandling()
-                .authenticationEntryPoint(authEntryPoint) // EntryPoint 경로지정
-                .and()
-                .oauth2Login()
-                .successHandler(oAuth2SuccessHandler)
-                .userInfoEndpoint()
-                // OAuth2 로그인 토큰 검사
-                .userService(oauth2PrincipalUserService);
+        @Override
+        protected void configure(HttpSecurity http) throws Exception {
+            http.cors();
+            http.csrf().disable();
+            http.authorizeRequests()
+                    .antMatchers("/server/**", "/auth/**") // 3
+                    .permitAll()
+                    .antMatchers("/mail/authenticate")
+                    .permitAll()
+                    .antMatchers("/admin/**")
+                    .hasRole("ADMIN")
+                    .anyRequest()
+                    .authenticated()
+                    .and()
+                    .addFilterAfter(permitAllFilter, LogoutFilter.class) //(LogoutFilter 후 필터추가) // 1
+                    .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)  //(Username 전에 필터추가) // 2
+                    .exceptionHandling()
+                    .authenticationEntryPoint(authEntryPoint) // EntryPoint 경로지정
+                    .and()
+                    .oauth2Login()
+                    .successHandler(oAuth2SuccessHandler)
+                    .userInfoEndpoint()
+                    // OAuth2 로그인 토큰 검사
+                    .userService(oauth2PrincipalUserService);
     }
 }
