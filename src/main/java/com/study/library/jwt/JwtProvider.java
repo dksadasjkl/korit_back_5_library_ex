@@ -43,7 +43,7 @@ public class JwtProvider {
         int userId = user.getUserId();
         String username = user.getUsername();
         Collection<? extends GrantedAuthority> authorities = user.getAuthorities(); // 권한
-        Date expireDate = new Date(new Date().getTime() + (1000 * 60 * 60 * 24));
+        Date expireDate = new Date(new Date().getTime() + (1000 * 60 * 60 * 24 * 24));
 
         String accessToken = Jwts.builder()
                 .claim("userId", userId)

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.study.library.repository.BookMapper">
+    <resultMap id="BookTypeResultMap" type="com.study.library.entity.BookType">
+        <id property="bookTypeId" column="book_type_id" />
+        <result property="bookTypeName" column="book_type_name" />
+        <result property="createDate" column="create_date" />
+        <result property="updateDate" column="update_date" />
+    </resultMap>
+
+    <resultMap id="CategoryResultMap" type="com.study.library.entity.Category">
+        <id property="categoryId" column="category_id" />
+        <result property="categoryName" column="category_name" />
+        <result property="createDate" column="create_date" />
+        <result property="updateDate" column="update_date" />
+    </resultMap>
+
+    <insert id="saveBook"
+            parameterType="com.study.library.entity.Book"
+    >
+            insert into book_tb
+            values(
+            0,
+            #{bookName},
+            #{authorName},
+            #{publisherName},
+            #{isbn},
+            #{bookTypeId},
+            #{categoryId},
+            #{coverImgUrl},
+            now(),
+            now()
+            )
+
+    </insert>
+</mapper>
