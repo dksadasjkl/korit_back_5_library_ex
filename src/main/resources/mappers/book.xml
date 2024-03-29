@@ -39,7 +39,7 @@
             #{bookName},
             #{authorName},
             #{publisherName},
-            #{isbn},
+            NULLIF(#{isbn}, ''),
             #{bookTypeId},
             #{categoryId},
             #{coverImgUrl},
@@ -137,5 +137,32 @@
             </when>
         </choose>
     </select>
+
+    <delete id="deleteBooksByBookIds" parameterType="list">
+        DELETE
+        FROM
+            book_tb
+        WHERE book_id IN (
+            <foreach collection="bookIds" item="bookId" separator=",">
+                #{bookId}
+            </foreach>
+        )
+    </delete>
+
+    <update id="updateBookByBookId" parameterType="com.study.library.entity.Book">
+        UPDATE
+            book_tb
+        SET
+            book_name = #{bookName},
+            author_name = #{authorName},
+            publisher_name = #{publisherName},
+            isbn = #{isbn},
+            book_type_id = #{bookTypeId},
+            category_id = #{categoryId},
+            cover_img_url = #{coverImgUrl},
+            update_date = now()
+        WHERE
+            book_id = #{bookId}
+    </update>
 
 </mapper>
